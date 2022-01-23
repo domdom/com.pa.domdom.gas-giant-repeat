@@ -1,0 +1,22 @@
+{
+    "identifier": "com.pa.domdom.gas-giant-repeat",
+    "context": "client",
+    "display_name": "Fix Gas Giant Repeat",
+    "description": "Fixes the gas giant shader to avoid stuttering after some time.",
+    "author": "dom314, Luther",
+    "forum": "https://forums.planetaryannihilation.com/threads/doms-random-mod-thread.73579/",
+    "icon": "https://github.com/domdom/com.pa.domdom.gas-giant-repeat/raw/main/icon.png",
+    "product": [
+      "Titans",
+      "Classic"
+    ],
+    "category": [
+      "in-game",
+      "effects"
+    ],
+    "version": "1.0.0",
+    "priority": 100,
+    "build": "115958",
+    "date": "2022-01-23",
+    "signature": " "
+  }
