@@ -53,6 +53,8 @@ void main()
     float temperature = PlanetParams.y;
     float planetRadius = PlanetParams.z;
 
+    float time = Time.x * 1;
+
     vec3 normal = vec3(0.0, 0.0, 1.0);
 
     vec3 viewNormal = v_Normal;
@@ -60,18 +62,16 @@ void main()
     vec3 normal_objectSpace = normalize(v_Position_ObjectSpace);
     vec3 sign_objectSpace = sign(v_Position_ObjectSpace);
 
-    float poleRotAngle = mod(Time.x * 0.0125, PI * 2.0);
+    float poleRotAngle = time * 0.0125;
     float poleRotCos = cos(poleRotAngle);
     float poleRotSin = sin(poleRotAngle);
     mat2 poleRotate = mat2(poleRotCos, -poleRotSin, poleRotSin, poleRotCos);
 
-    float noiseTime = mod(Time.x * 0.0075, 1.0);
 
     vec2 distortTextureSize = textureSize(DistortTexture, 0);
 
     float TurbulenceValue = 0.005;
 
-    float smallNoiseTime = mod(Time.x * 0.125, 1.0);
     vec2 smallDistortTexScale = vec2(150.0, 130.0);
     float smallDistortStrength = 0.0025;
     float distortTexScale = 2000.0;
@@ -79,12 +79,12 @@ void main()
     float bigDistortTexScale = 10500.0;
     float bigDistortStrength = TurbulenceValue;
 
-    float poleRotAngle2 = mod(Time.x * -0.0125, PI * 2.0);
+    float poleRotAngle2 = time * -0.0125;
     float poleRotCos2 = cos(poleRotAngle2);
     float poleRotSin2 = sin(poleRotAngle2);
     mat2 poleRotate2 = mat2(poleRotCos2, -poleRotSin2, poleRotSin2, poleRotCos2);
 
-    vec2 topUV = poleRotate2 * (v_Position_ObjectSpace.xy / bigDistortTexScale) + mod(PlanetParams.x / 15919.0, 1.0);
+    vec2 topUV = poleRotate2 * (v_Position_ObjectSpace.xy / bigDistortTexScale) + mod(planetSeed / 15919.0, 1.0);
     if (normal_objectSpace.z < 0.0)
         topUV += 0.5;
 
@@ -115,11 +115,11 @@ void main()
 
     noise2_raw = noise2_raw * 2.0 - 1.0;
 
-    vec2 stripeDirUV = vec2(mod(PlanetParams.x / 7919.0, 1.0), mod(PlanetParams.x / 6619.0, 1.0) + v_Position_ObjectSpace.z / 10000.0 + noise2_raw.z * bigDistortStrength);
+    vec2 stripeDirUV = vec2(mod(planetSeed / 7919.0, 1.0), mod(planetSeed / 6619.0, 1.0) + v_Position_ObjectSpace.z / 10000.0 + noise2_raw.z * bigDistortStrength);
     vec4 stripeDir_raw = texture(DistortTexture, stripeDirUV);
     float stripeDir = stripeDir_raw.x * 2.0 - 1.0;
 
-    float poleRotAngleA = mod(Time.x * 0.025, PI) - stripeDir * 0.25;
+    float poleRotAngleA = time * 0.025 - stripeDir * 0.25;
     float poleRotCosA = cos(poleRotAngleA);
     float poleRotSinA = sin(poleRotAngleA);
     mat2 poleRotateA = mat2(poleRotCosA, -poleRotSinA, poleRotSinA, poleRotCosA);
@@ -184,7 +184,7 @@ void main()
     float noise3 = noise3_raw.r * noise3Blend.r + noise3_raw.g * noise3Blend.g + noise3_raw.b * noise3Blend.b;
     noise3 = noise3 * 2.0 - 1.0;
 
-    vec2 stripesUV = vec2(mod(PlanetParams.x / 7919.0, 1.0), v_Position_ObjectSpace.z / 8000.0 + vec2(noiseSmallDistort.x * 0.0125, 0.0));
+    vec2 stripesUV = vec2(mod(planetSeed / 7919.0, 1.0), v_Position_ObjectSpace.z / 8000.0 + vec2(noiseSmallDistort.x * 0.0125, 0.0));
     // stripesUV.t = (floor(stripesUV.t * distortTextureSize.y) + smoothstep(0.0, 1.0, mod(stripesUV.t * distortTextureSize.y, 1.0))) / distortTextureSize.y;
 
     vec4 stripes = texture(DistortTexture, stripesUV);
